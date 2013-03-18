@@ -1,7 +1,7 @@
 Solarized Colorscheme for Emacs
 ===============================
 
-Stolen from Ethan Schoonover <es@ethanschoonover.com> by Greg Pfeil <greg@technomadic.org>
+Stolen from Ethan Schoonover <es@ethanschoonover.com> by Greg Pfeil <greg@technomadic.org>, coarsely debased by Huw Giddens <hgiddens@gmail.com>.
 
 Visit the [Solarized homepage]
 ------------------------------
