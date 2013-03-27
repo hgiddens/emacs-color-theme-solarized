@@ -51,6 +51,13 @@ the \"Gen RGB\" column in solarized-definitions.el to improve them further."
   :type 'boolean
   :group 'solarized)
 
+(defcustom solarized-assume-solarized-terminal t
+  "Whether to assume that TTY frames are using a Solarized colour
+theme. If this is t, `xterm-standard-colors' will be adjusted to
+reflect the Solarized colours."
+  :type 'boolean
+  :group 'solarized)
+
 ;; FIXME: The Generic RGB colors will actually vary from device to device, but
 ;;        hopefully these are closer to the intended colors than the sRGB values
 ;;        that Emacs seems to dislike
@@ -86,7 +93,18 @@ the \"Gen RGB\" column in solarized-definitions.el to improve them further."
                              (16 4)
                              (8  5)
                              (otherwise 3)))))
-             (nth index (assoc name solarized-colors)))))
+             (nth index (assoc name solarized-colors))))
+         (term-colors (color)
+           (setf color (find color solarized-colors :test #'equal :key #'fifth))
+           (mapcar
+            ;; If we start up as a terminal, wrong colour depth when this runs breaks everything.
+            ;;(lambda (x) (/ x 256))
+            ;;(color-values (nth (if solarized-broken-srgb 2 1) color))
+            (lambda (x) (string-to-number x 16))
+            (let ((str (nth (if solarized-broken-srgb 2 1) color)))
+              (list (substring str 1 3)
+                    (substring str 3 5)
+                    (substring str 5 7))))))
     (let ((base03      (find-color 'base03))
           (base02      (find-color 'base02))
           (base01      (find-color 'base01))
@@ -113,8 +131,33 @@ the \"Gen RGB\" column in solarized-definitions.el to improve them further."
         (rotatef base02 base2)
         (rotatef base01 base1)
         (rotatef base00 base0))
+      (when solarized-assume-solarized-terminal
+        (message "SETTING COLORS %s" (boundp 'xterm-standard-colors))
+        (message "BAKED %s" (loop for color in '("black" "red" "green" "yellow" "blue" "magenta" "cyan" "white")
+                                  for color-num from 0
+                                  as bright-color = (concat "bright" color)
+                                  as bright-color-num = (+ color-num 8)
+                                  collect (list color color-num (term-colors color)) into colors
+                                  collect (list bright-color bright-color-num (term-colors bright-color)) into colors
+                                  finally return (sort* colors #'< :key #'second)))
+        (setq xterm-standard-colors
+              (loop for color in '("black" "red" "green" "yellow" "blue" "magenta" "cyan" "white")
+                    for color-num from 0
+                    as bright-color = (concat "bright" color)
+                    as bright-color-num = (+ color-num 8)
+                    collect (list color color-num (term-colors color)) into colors
+                    collect (list bright-color bright-color-num (term-colors bright-color)) into colors
+                    finally return (sort* colors #'< :key #'second)))
+        (message "%s" xterm-standard-colors)
+        (message "SET COLORS %s" (first xterm-standard-colors))
+        (when (fboundp 'xterm-register-default-colors)
+          ;; xterm doesn't provide anything so we can't use `eval-after-load'.
+          (xterm-register-default-colors))
+        (message "SET COLORS %s" (first xterm-standard-colors)))
       (let ((back base03))
         (cond ((< (display-color-cells) 16)
+               (setf back nil))
+              (solarized-assume-solarized-terminal
                (setf back nil))
               ((eq 'high solarized-contrast)
                (let ((orig-base3 base3))
