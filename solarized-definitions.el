@@ -51,7 +51,7 @@ the \"Gen RGB\" column in solarized-definitions.el to improve them further."
   :type 'boolean
   :group 'solarized)
 
-(defcustom solarized-assume-solarized-terminal t
+(defcustom solarized-assume-solarized-terminal nil
   "Whether to assume that TTY frames are using a Solarized colour
 theme. If this is t, `xterm-standard-colors' will be adjusted to
 reflect the Solarized colours."
@@ -136,18 +136,6 @@ reflect the Solarized colours."
         (rotatef base02 base2)
         (rotatef base01 base1)
         (rotatef base00 base0))
-      (when solarized-assume-solarized-terminal
-        (setq xterm-standard-colors
-              (loop for color in '("black" "red" "green" "yellow" "blue" "magenta" "cyan" "white")
-                    for color-num from 0
-                    as bright-color = (concat "bright" color)
-                    as bright-color-num = (+ color-num 8)
-                    collect (list color color-num (term-colors color)) into colors
-                    collect (list bright-color bright-color-num (term-colors bright-color)) into colors
-                    finally return (sort* colors #'< :key #'second)))
-        (when (fboundp 'xterm-register-default-colors)
-          ;; xterm doesn't provide anything so we can't use `eval-after-load'.
-          (xterm-register-default-colors)))
       (let ((back base03))
         (cond ((< (display-color-cells) 16)
                (setf back nil))
