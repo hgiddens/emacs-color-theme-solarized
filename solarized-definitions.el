@@ -91,7 +91,7 @@ reflect the Solarized colours."
                                (if solarized-broken-srgb 2 1))
                            (if (and solarized-assume-solarized-terminal
                                     (>= (display-color-cells) 16))
-                               (if (eq system-type 'darwin)
+                               (if solarized-broken-srgb
                                    2
                                  1)
                              (case (display-color-cells)
