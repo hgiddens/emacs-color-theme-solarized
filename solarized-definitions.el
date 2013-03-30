@@ -146,8 +146,6 @@ reflect the Solarized colours."
       (let ((back base03))
         (cond ((< (display-color-cells) 16)
                (setf back nil))
-              (solarized-assume-solarized-terminal
-               (setf back nil))
               ((eq 'high solarized-contrast)
                (let ((orig-base3 base3))
                  (rotatef base01 base00 base0 base1 base2 base3)
