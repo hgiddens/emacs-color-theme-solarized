@@ -85,31 +85,17 @@ reflect the Solarized colours."
 
 (defun solarized-color-definitions (mode)
   (flet ((find-color (name)
-           (let* ((index (if window-system
-                             (if solarized-degrade
-                                 3
-                               (if solarized-broken-srgb 2 1))
-                           (if (and solarized-assume-solarized-terminal
-                                    (>= (display-color-cells) 16))
-                               (if solarized-broken-srgb
-                                   2
-                                 1)
-                             (case (display-color-cells)
-                               (16 4)
-                               (8  5)
-                               (otherwise 3))))))
-             (nth index (assoc name solarized-colors))))
-         (term-colors (color)
-           (setf color (find color solarized-colors :test #'equal :key #'fifth))
-           (mapcar
-            ;; If we start up as a terminal, wrong colour depth when this runs breaks everything.
-            ;;(lambda (x) (/ x 256))
-            ;;(color-values (nth (if solarized-broken-srgb 2 1) color))
-            (lambda (x) (string-to-number x 16))
-            (let ((str (nth (if solarized-broken-srgb 2 1) color)))
-              (list (substring str 1 3)
-                    (substring str 3 5)
-                    (substring str 5 7))))))
+           (let* ((cells (display-color-cells))
+                  (index (cond
+                          (window-system (cond
+                                          (solarized-degrade 3)
+                                          (solarized-broken-srgb 2)
+                                          (:otherwise 1)))
+                          (solarized-assume-solarized-terminal 2)
+                          ((= cells 16) 4)
+                          ((= cells 8) 5)
+                          (:otherwise 3))))
+             (nth index (assoc name solarized-colors)))))
     (let ((base03      (find-color 'base03))
           (base02      (find-color 'base02))
           (base01      (find-color 'base01))
