@@ -89,10 +89,15 @@ reflect the Solarized colours."
                              (if solarized-degrade
                                  3
                                (if solarized-broken-srgb 2 1))
-                           (case (display-color-cells)
-                             (16 4)
-                             (8  5)
-                             (otherwise 3)))))
+                           (if (and solarized-assume-solarized-terminal
+                                    (>= (display-color-cells) 16))
+                               (if (eq system-type 'darwin)
+                                   2
+                                 1)
+                             (case (display-color-cells)
+                               (16 4)
+                               (8  5)
+                               (otherwise 3))))))
              (nth index (assoc name solarized-colors))))
          (term-colors (color)
            (setf color (find color solarized-colors :test #'equal :key #'fifth))
