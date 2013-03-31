@@ -52,9 +52,7 @@ the \"Gen RGB\" column in solarized-definitions.el to improve them further."
   :group 'solarized)
 
 (defcustom solarized-assume-solarized-terminal nil
-  "Whether to assume that TTY frames are using a Solarized colour
-theme. If this is t, `xterm-standard-colors' will be adjusted to
-reflect the Solarized colours."
+  "Whether to assume that TTY frames are using a Solarized colour theme."
   :type 'boolean
   :group 'solarized)
 
