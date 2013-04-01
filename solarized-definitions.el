@@ -51,6 +51,11 @@ the \"Gen RGB\" column in solarized-definitions.el to improve them further."
   :type 'boolean
   :group 'solarized)
 
+(defcustom solarized-assume-solarized-terminal nil
+  "Whether to assume that TTY frames are using a Solarized colour theme."
+  :type 'boolean
+  :group 'solarized)
+
 ;; FIXME: The Generic RGB colors will actually vary from device to device, but
 ;;        hopefully these are closer to the intended colors than the sRGB values
 ;;        that Emacs seems to dislike
@@ -78,14 +83,16 @@ the \"Gen RGB\" column in solarized-definitions.el to improve them further."
 
 (defun solarized-color-definitions (mode)
   (flet ((find-color (name)
-           (let* ((index (if window-system
-                             (if solarized-degrade
-                                 3
-                               (if solarized-broken-srgb 2 1))
-                           (case (display-color-cells)
-                             (16 4)
-                             (8  5)
-                             (otherwise 3)))))
+           (let* ((cells (display-color-cells))
+                  (index (cond
+                          (window-system (cond
+                                          (solarized-degrade 3)
+                                          (solarized-broken-srgb 2)
+                                          (:otherwise 1)))
+                          (solarized-assume-solarized-terminal 2)
+                          ((= cells 16) 4)
+                          ((= cells 8) 5)
+                          (:otherwise 3))))
              (nth index (assoc name solarized-colors)))))
     (let ((base03      (find-color 'base03))
           (base02      (find-color 'base02))
@@ -148,9 +155,9 @@ the \"Gen RGB\" column in solarized-definitions.el to improve them further."
               (fg-base02 `(:foreground ,base02))
               (fg-base01 `(:foreground ,base01))
               (fg-base00 `(:foreground ,base00))
-              (fg-base0 `(:foreground ,(when (<= 16 (display-color-cells))
+              (fg-base0 `(:foreground ,(when (or solarized-assume-solarized-terminal (<= 16 (display-color-cells)))
                                          base0)))
-              (fg-base1 `(:foreground ,(when (<= 16 (display-color-cells))
+              (fg-base1 `(:foreground ,(when (or solarized-assume-solarized-terminal (<= 16 (display-color-cells)))
                                          base1)))
               (fg-base2 `(:foreground ,base2))
               (fg-base3 `(:foreground ,base3))
@@ -535,10 +542,10 @@ the \"Gen RGB\" column in solarized-definitions.el to improve them further."
          (paren-face-mismatch ((t (,@fg-magenta))))
          (paren-face-no-match ((t (,@fg-yellow)))))
 
-            ((foreground-color . ,(when (<= 16 (display-color-cells)) base0))
+            ((foreground-color . ,(when (or solarized-assume-solarized-terminal (<= 16 (display-color-cells))) base0))
              (background-color . ,back)
              (background-mode . ,mode)
-             (cursor-color . ,(when (<= 16 (display-color-cells))
+             (cursor-color . ,(when (or solarized-assume-solarized-terminal (<= 16 (display-color-cells)))
                                 base0))
 	     (ansi-color-names-vector . [,base02 ,red ,green ,yellow ,blue ,magenta ,cyan ,base00]))))))))
 
