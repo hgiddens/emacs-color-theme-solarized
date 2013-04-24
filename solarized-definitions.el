@@ -540,7 +540,11 @@ the \"Gen RGB\" column in solarized-definitions.el to improve them further."
          ;; mic-paren
          (paren-face-match ((t (,@bg-base02))))
          (paren-face-mismatch ((t (,@fg-magenta))))
-         (paren-face-no-match ((t (,@fg-yellow)))))
+         (paren-face-no-match ((t (,@fg-yellow))))
+         ;; sh-mode
+         (sh-heredoc ((t (,@fg-base00))))
+         (sh-quoted-exec ((t (,@fg-magenta))))
+         (sh-escaped-newline ((t (:foreground unspecified :inherit font-lock-special-keyword-face)))))
 
             ((foreground-color . ,(when (or solarized-assume-solarized-terminal (<= 16 (display-color-cells))) base0))
              (background-color . ,back)
