@@ -526,8 +526,8 @@ the \"Gen RGB\" column in solarized-definitions.el to improve them further."
              (font-latex-warning-face ((t (,@fg-red))))
              (font-latex-sectioning-5-face ((t (,@fg-violet))))
              ;;flyspell
-             (flyspell-incorrect ((t (,@fg-red))))
-             (flyspell-duplicate ((t (,@fg-yellow))))
+             (flyspell-incorrect ((t (:underline (:color ,red)))))
+             (flyspell-duplicate ((t (:underline (:color ,yellow)))))
 	     ;;ansi-term
 	     (term-color-black ((t ( ,@fg-base02))))
 	     (term-color-red ((t ( ,@fg-red))))
