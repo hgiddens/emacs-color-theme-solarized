@@ -320,6 +320,7 @@ the \"Gen RGB\" column in solarized-definitions.el to improve them further."
              (info-xref ((t (,@fmt-undr ,@fg-blue))))
              (info-xref-visited ((t (,@fg-magenta :inherit info-xref))))
              ;; org
+             (org-code ((t (,@fg-base01 :inherit fixed-pitch))))
              (org-hide ((t (,@fg-base03))))
              (org-todo ((t (,@fmt-bold ,@fg-base03 ,@bg-red))))
              (org-done ((t (,@fmt-bold ,@fg-green))))
