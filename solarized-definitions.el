@@ -322,7 +322,7 @@ the \"Gen RGB\" column in solarized-definitions.el to improve them further."
              ;; org
              (org-code ((t (,@fg-base01 :inherit fixed-pitch))))
              (org-hide ((t (,@fg-base03))))
-             (org-table ((t (:inherit fixed-pitch))))
+             (org-table ((t (,@fg-violet :inherit fixed-pitch))))
              (org-todo ((t (,@fmt-bold ,@fg-base03 ,@bg-red))))
              (org-done ((t (,@fmt-bold ,@fg-green))))
              (org-todo-kwd-face ((t (,@fg-red ,@bg-base03))))
