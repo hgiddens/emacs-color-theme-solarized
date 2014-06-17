@@ -543,6 +543,8 @@ the \"Gen RGB\" column in solarized-definitions.el to improve them further."
          (paren-face-match ((t (,@bg-base02))))
          (paren-face-mismatch ((t (,@fg-magenta))))
          (paren-face-no-match ((t (,@fg-yellow))))
+         ;; markdown
+         (markdown-pre-face ((t (:inherit fixed-pitch ,@fg-base00))))
          ;; sh-mode
          (sh-heredoc ((t (,@fg-base00))))
          (sh-quoted-exec ((t (,@fg-magenta))))
